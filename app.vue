@@ -1,6 +1,6 @@
 <template>
-  <NuxtPage v-if="isLoginOpen"/>
-  <AuthOverlay/>
+  <NuxtPage />
+  <AuthOverlay v-if="isLoginOpen"/>
 </template>
 <script setup>
 
