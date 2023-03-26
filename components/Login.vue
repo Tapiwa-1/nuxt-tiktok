@@ -9,10 +9,10 @@
             v-model:input="email"
             inputType="email"
             :autoFocus="true"
-            error=""
+            :error="errors && errors.email ? errors.email[0] : ''"
         />
-        <!-- :error="errors && errors.email ? errors.email[0] : ''" -->
     </div>
+
     <div class="px-6 pb-2">
         <TextInput 
             placeholder="Password"
@@ -21,7 +21,8 @@
         />
     </div>
     <div class="px-6 text-[12px] text-gray-600">Forgot password?</div>
-        <div class="px-6 pb-2 mt-6">
+
+    <div class="px-6 pb-2 mt-6">
         <button 
             :disabled="(!email || !password)"
             :class="(!email || !password) ? 'bg-gray-200' : 'bg-[#F02C56]'"
@@ -31,29 +32,27 @@
             Log in
         </button>
     </div>
-
 </template>
 
 <script setup>
+const { $userStore, $generalStore } = useNuxtApp()
 
 let email = ref(null)
 let password = ref(null)
 let errors = ref(null)
-// const login = async () => {
-//     errors.value = null
-//     try {
-//         await $userStore.getTokens()
-//         await $userStore.login(email.value, password.value)
-//         await $userStore.getUser()
-//         await $generalStore.getRandomUsers('suggested')
-//         await $generalStore.getRandomUsers('following')
-//         $generalStore.isLoginOpen = false
-//     } catch (error) {
-//         errors.value = error.response.data.errors
-//     }
-// }
+
+const login = async () => {
+    errors.value = null
+
+    try {
+        await $userStore.getTokens()
+        await $userStore.login(email.value, password.value)
+        await $userStore.getUser()
+        // await $generalStore.getRandomUsers('suggested')
+        // await $generalStore.getRandomUsers('following')
+        $generalStore.isLoginOpen = false
+    } catch (error) {
+        errors.value = error.response.data.errors
+    }
+}
 </script>
-
-<style>
-
-</style>
