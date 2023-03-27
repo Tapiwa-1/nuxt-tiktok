@@ -54,6 +54,7 @@
                                 class="rounded-full" 
                                 width="33" 
                                 :src="$userStore.image"
+                                
                             >
                         </button>
 
@@ -62,7 +63,6 @@
                             id="PopupMenu"
                             class="absolute bg-white rounded-lg py-1.5 w-[200px] shadow-xl border top-[43px] -right-2"
                         >
-                        {{ showMenu  }} {{ $userStore.id }}
                             <NuxtLink 
                                 :to="`/profile/${$userStore.id}`" 
                                 @click="showMenu = false"
@@ -105,6 +105,7 @@ onMounted(() => {
 
 const isLoggedIn = () => {
     if ($userStore.id) {
+
         router.push('/upload')
     } else {
         $generalStore.isLoginOpen = true

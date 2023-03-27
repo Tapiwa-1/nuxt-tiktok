@@ -42,6 +42,10 @@ export const useUserStore = defineStore('user', {
       this.$state.bio = res.data[0].bio
       this.$state.image = res.data[0].image
     },
+    async createPost(data) {
+      return await $axios.post('/api/posts', data)
+    },
+
 
     resetUser() {      
       this.$state.id = ''

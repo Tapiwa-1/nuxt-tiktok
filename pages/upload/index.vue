@@ -207,6 +207,29 @@ const discard = () => {
     fileData.value = null
     caption.value = ''
 }
+
+const createPost = async () => {
+    errors.value = null
+    let data = new FormData();
+    data.append('video', fileData.value || '')
+    data.append('text', caption.value || '')
+    if (fileData.value && caption.value) {
+        isUploading.value = true
+    }
+    try {
+        let res = await $userStore.createPost(data)
+        if (res.status === 200) {
+            setTimeout(() => {
+                router.push('/profile/' + $userStore.id)
+                isUploading.value = false
+            }, 1000)
+        }
+    } catch (error) {
+        errors.value = error.response.data.errors
+        isUploading.value = false
+    }
+}
+
 const clearVideo = () => {
     file.value = null
     fileDisplay.value = null
