@@ -1,42 +1,30 @@
-# Nuxt 3 Minimal Starter
+## Tiktok clone
+<p>Simple instagram clone l have developed with Nuxt</p>
+<img  src="/public/Screenshots/5.png"/> 
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Features
+- User Login
+- User Register
+- User Logout
+- Create/ Delete Post with images and images
+- Add or Remove profile picture
 
-## Setup
-
-Make sure to install the dependencies:
-
-```bash
-# yarn
-yarn install
-
-# npm
-npm install
-
-# pnpm
-pnpm install
+## ScreenShots
+| <img  src="/public/Screenshots/1.png"/> | <img  src="/public/Screenshots/3.png"/> |
+| ------------- | ------------- |
+| <img  src="/public/Screenshots/2.png"/> | <img  src="/public/Screenshots/4.png"/> |
+| ------------- | ------------- |
+## Installation
 ```
+git clone https://github.com/Tapiwa-1/instagram-clone.git
 
-## Development Server
+cd instagram-clone
 
-Start the development server on http://localhost:3000
+composer update
 
-```bash
-npm run dev
+npm install && npm run dev
+
+cp .env.example .env
+
+php artisan key:generate
 ```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
