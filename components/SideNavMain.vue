@@ -22,10 +22,11 @@
 
 
             <div 
-               
+                v-if="$generalStore.suggested" 
+                v-for="sug in $generalStore.suggested"
             >
                 <div @click="isLoggedIn(sug)" class="cursor-pointer">
-                    <MenuItemFollow  />
+                    <MenuItemFollow :user="sug" />
                 </div>
             </div>
 
@@ -34,7 +35,7 @@
                 See all
             </button>
 
-            <div >
+            <div v-if="$userStore.id">
                 <div class="border-b lg:ml-2 mt-2" />
 
                 <div class="lg:block hidden text-xs text-gray-600 font-semibold pt-4 pb-2 px-2">
@@ -44,10 +45,11 @@
                 <div class="lg:hidden block pt-3" />
 
                 <div 
-                    
+                    v-if="$generalStore.following" 
+                    v-for="fol in $generalStore.following"
                 >
                     <div @click="isLoggedIn(fol)" class="cursor-pointer">
-                        <MenuItemFollow  />
+                        <MenuItemFollow :user="fol" />
                     </div>
                 </div>
 
@@ -70,8 +72,15 @@
 </template>
 
 <script setup>
-
+const { $generalStore, $userStore } = useNuxtApp()
 const route = useRoute()
 const router = useRouter()
 
+const isLoggedIn = (fol) => {
+    if (!$userStore.id) {
+        $generalStore.isLoginOpen = true
+        return
+    }
+    setTimeout(() => router.push(`/profile/${fol.id}`), 200)
+}
 </script>

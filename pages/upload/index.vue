@@ -1,11 +1,21 @@
-<template>
+<template>    
+
     <UploadError :errorType="errorType"/>
+
+    <div 
+        v-if="isUploading"
+        class="fixed flex items-center justify-center top-0 left-0 w-full h-screen bg-black z-50 bg-opacity-50"
+    >
+        <Icon class="animate-spin ml-1" name="mingcute:loading-line" size="100" color="#FFFFFF"/>
+    </div>
+
     <UploadLayout>
         <div class="w-full mt-[80px] mb-[40px] bg-white shadow-lg rounded-md py-6 md:px-10 px-4">
             <div>
                 <div class="text-[23px] font-semibold">Upload video</div>
                 <div class="text-gray-400 mt-1">Post a video to your account</div>
             </div>
+
             <div class="mt-8 md:flex gap-6">
 
                 <label 
@@ -53,6 +63,7 @@
                         accept=".mp4" 
                     />
                 </label>
+
                 <div
                     v-else
                     class="
@@ -96,13 +107,14 @@
                             <Icon name="clarity:success-standard-line" size="16" class="min-w-[16px]"/>
                             <div class="text-[11px] pl-1 truncate text-ellipsis">{{ fileData.name }}</div>
                         </div>
-                        <button @click="clearVideo"  class="text-[11px] ml-2 font-semibold">
+                        <button @click="clearVideo" class="text-[11px] ml-2 font-semibold">
                             Change
                         </button>
                     </div>
                 </div>
+
                 <div class="mt-4 mb-6">
-                     <div class="flex bg-[#F8F8F8] py-4 px-6">
+                    <div class="flex bg-[#F8F8F8] py-4 px-6">
                         <div>
                             <Icon class="mr-4" size="20" name="mdi:box-cutter-off"/>
                         </div>
@@ -117,8 +129,9 @@
                                 Edit
                             </button>
                         </div>
-                     </div>
-                     <div class="mt-5">
+                    </div>
+
+                    <div class="mt-5">
                         <div class="flex items-center justify-between">
                             <div class="mb-1 text-[15px]">Caption</div>
                             <div class="text-gray-400 text-[12px]">{{ caption.length }}/150</div>
@@ -135,7 +148,8 @@
                                 focus:outline-none
                             "
                         >
-                     </div>
+                    </div>
+
                     <div class="flex gap-3">
                         <button 
                             @click="discard()"
@@ -160,15 +174,18 @@
                         </div>
                     </div>
 
-
                 </div>
+
             </div>
         </div>
-
     </UploadLayout>
 </template>
+
 <script setup>
 import UploadLayout from '~/layouts/UploadLayout.vue';
+
+const { $userStore } = useNuxtApp()
+const router = useRouter()
 
 let file = ref(null)
 let fileDisplay = ref(null)
@@ -178,17 +195,8 @@ let fileData = ref(null)
 let errors = ref(null)
 let isUploading = ref(false)
 
-const onDrop = (e) => {
-    errorType.value = '' // when ever we drop clear error value
-    file.value = e.dataTransfer.files[0];
-    fileData.value = e.dataTransfer.files[0]
-    let extention = file.value.name.substring(file.value.name.lastIndexOf('.') + 1); //get the extension from the file
-    if (extention !== 'mp4') {
-        errorType.value = 'file'
-        return
-    }
-    fileDisplay.value = URL.createObjectURL(e.dataTransfer.files[0]) //create a url out of the file and store it in fileDisplay.value
-}
+// definePageMeta({ middleware: 'auth' })
+
 watch(() => caption.value, (caption) => {
     if (caption.length >= 150) {
         errorType.value = 'caption'
@@ -196,9 +204,25 @@ watch(() => caption.value, (caption) => {
     }
     errorType.value = null
 })
+
 const onChange = () => {
     fileDisplay.value = URL.createObjectURL(file.value.files[0])
     fileData.value = file.value.files[0]
+}
+
+const onDrop = (e) => {
+    errorType.value = ''
+    file.value = e.dataTransfer.files[0];
+    fileData.value = e.dataTransfer.files[0]
+
+    let extention = file.value.name.substring(file.value.name.lastIndexOf('.') + 1);
+
+    if (extention !== 'mp4') {
+        errorType.value = 'file'
+        return
+    }
+
+    fileDisplay.value = URL.createObjectURL(e.dataTransfer.files[0])
 }
 
 const discard = () => {
@@ -210,12 +234,16 @@ const discard = () => {
 
 const createPost = async () => {
     errors.value = null
+
     let data = new FormData();
+
     data.append('video', fileData.value || '')
     data.append('text', caption.value || '')
+
     if (fileData.value && caption.value) {
         isUploading.value = true
     }
+
     try {
         let res = await $userStore.createPost(data)
         if (res.status === 200) {
